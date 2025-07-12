@@ -1,4 +1,4 @@
-# SkillSwap 🔄
+# SkillSwap 
 
 A **peer-to-peer skill exchange platform** where users can trade skills instead of money. This project empowers users to share knowledge, learn from others, and build connections — all without financial barriers.
 
@@ -6,9 +6,9 @@ A **peer-to-peer skill exchange platform** where users can trade skills instead 
 
 ---
 
-## 📚 Table of Contents
+##  Table of Contents
 
-- [Features](#features-✨)
+- [Features](#features-)
 - [Technologies](#technologies-️)
 - [Installation](#installation-️)
 - [Usage](#usage-)
@@ -19,28 +19,28 @@ A **peer-to-peer skill exchange platform** where users can trade skills instead 
 
 ---
 
-## Features ✨
+## Features 
 
-### 👤 User Profiles
+###  User Profiles
 - Create, edit, and manage your profile
 - Add skills you offer and those you're seeking
 - Set your availability (e.g., evenings, weekends)
 - Public/private profile toggle
 
-### 🔄 Skill Swapping
+###  Skill Swapping
 - Browse/search other users by skill
 - Send and manage swap requests
 - View history of completed exchanges
 - Built-in chat for smooth communication
 
-### 🌟 Rating System
+###  Rating System
 - Leave and view feedback after swaps
 - Build your credibility and profile reputation
 - Earn badges for achievements and activity
 
 ---
 
-## Technologies 🛠️
+## Technologies 
 
 ### Frontend
 - **React.js** (Functional components + Hooks)
@@ -57,7 +57,7 @@ A **peer-to-peer skill exchange platform** where users can trade skills instead 
 
 ---
 
-## Installation ⚙️
+## Installation ⚙
 
 1. **Clone the repository**:
    ```bash
