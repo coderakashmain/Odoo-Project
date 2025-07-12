@@ -16,7 +16,9 @@ import {
   Calendar,
 } from "lucide-react";
 import Pagination from "../../component/utils/Pegination";
+import { AuthContext } from "../../context/Auth/Auth";
 const HomePage = () => {
+const { usertoken } = React.useContext(AuthContext);
   const [publicRequests, setPublicRequests] = useState([
     {
       id: 1,
@@ -27,7 +29,7 @@ const HomePage = () => {
       skillRequested: "UI/UX Design",
       location: "Boston, MA",
       availability: ["Weekends", "Evenings"],
-      posted: "2 days ago",
+      posted: "3 hours ago",
       description:
         "Looking for help with redesigning my portfolio site in exchange for React development.",
     },
@@ -40,7 +42,7 @@ const HomePage = () => {
       skillRequested: "Photography",
       location: "New York, NY",
       availability: ["Weekdays", "Afternoons"],
-      posted: "1 day ago",
+      posted: "1 hours ago",
       description:
         "Need product photos for my e-commerce store. Can edit your videos in return.",
     },
@@ -66,7 +68,7 @@ const HomePage = () => {
       skillRequested: "Content Writing",
       location: "Austin, TX",
       availability: ["Weekdays", "Evenings"],
-      posted: "1 week ago",
+      posted: "5 hours ago",
       description:
         "Can optimize your website SEO if you can write blog posts for my site.",
     },
@@ -79,7 +81,7 @@ const HomePage = () => {
       skillRequested: "WordPress Development",
       location: "Seattle, WA",
       availability: ["Weekends"],
-      posted: "5 days ago",
+      posted: "1 hours ago",
       description:
         "Looking for someone to build a WordPress site in exchange for logo and branding design.",
     },
@@ -103,6 +105,11 @@ const HomePage = () => {
   const [requestedSkillFilter, setRequestedSkillFilter] = useState("");
   const [availabilityFilter, setAvailabilityFilter] = useState("");
   const [skillTypeFilter, setSkillTypeFilter] = useState("");
+  const [sentRequests, setSentRequests] = useState(() => {
+    const saved = localStorage.getItem("sentRequests");
+    return saved ? JSON.parse(saved) : {};
+  });
+
 
   const filteredRequests = publicRequests.filter((request) => {
     const matchesSearch =
@@ -143,6 +150,19 @@ const HomePage = () => {
     "Afternoons",
     "Evenings",
   ];
+
+  const handleConnect = async (receiverId) => {
+
+       const updated = {
+      ...sentRequests,
+      [receiverId]: true,
+    };
+      setSentRequests(updated);
+
+   
+    localStorage.setItem("sentRequests", JSON.stringify(updated));
+
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
@@ -321,8 +341,20 @@ const HomePage = () => {
                         <span className="text-sm text-gray-500">
                           {request.posted}
                         </span>
-                        <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition">
-                          Connect
+                        <button
+                          disabled={ sentRequests[request.id]}
+                          onClick={() => {
+                            
+                            if(!usertoken?.user.id) {
+                              alert("Please log in to connect with this user.");
+                              return;
+                            }
+                            handleConnect(request.id)}}
+                          className={`px-4 py-2 text-sm rounded-lg transition ${sentRequests[request.id]
+                            ? "bg-gray-300 text-gray-700 cursor-not-allowed"
+                            : "bg-indigo-600 text-white hover:bg-indigo-700"
+                            }`}>
+                          {sentRequests[request.id] ? "Request Sent" : "Connect"}
                         </button>
                       </div>
                     </div>
@@ -330,7 +362,7 @@ const HomePage = () => {
                 ))}
               </div>
               <Pagination
-                totalPages={totalPages}
+                totalPages={ Math.round(filteredRequests.length / 6) || 1}
                 currentPage={currentPage}
                 onPageChange={setCurrentPage}
               />

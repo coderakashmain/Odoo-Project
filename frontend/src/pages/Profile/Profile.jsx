@@ -35,6 +35,8 @@ import {
   HelpCircle,
 } from "lucide-react";
 import ChatPanel from "./chatPanel";
+import { AuthContext } from "../../context/Auth/Auth";
+import { useEffect } from "react";
 
 const ProfilePage = () => {
 
@@ -45,6 +47,13 @@ const ProfilePage = () => {
   });
   console.log("User token:", editUser);
 
+  if(!usertoken){
+    return(
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold text-gray-700">Loading...</h1>
+      </div>
+    )
+  }
 
   // User data state
   const [user, setUser] = useState({
@@ -58,7 +67,7 @@ const ProfilePage = () => {
     skillsNeeded: ["Web Development", "Video Editing"],
     availability: ["Weekdays", "Evenings"],
     completedSwaps: 12,
-    memberSince: "2022",
+    memberSince: "2025",
     badges: ["Top Swapper", "Verified", "Early Adopter"],
   });
 
@@ -746,7 +755,7 @@ const ProfilePage = () => {
                   <div className="relative mb-4">
                     <div className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-100 to-purple-200 flex items-center justify-center overflow-hidden shadow-md">
                       <span className="text-4xl font-bold text-indigo-700">
-                        {user.name
+                        {usertoken.user.name
                           .split(" ")
                           .map((n) => n[0])
                           .join("")}
@@ -781,7 +790,7 @@ const ProfilePage = () => {
                             className="border-b border-gray-300 focus:outline-none focus:border-indigo-500"
                           />
                         ) : (
-                          user.name
+                          usertoken.user.name
                         )}
                       </h1>
                       <p className="text-indigo-600 font-medium">
@@ -890,12 +899,12 @@ const ProfilePage = () => {
                     <div className="mt-4 space-y-4">
                       <div className="flex items-center">
                         <Mail size={18} className="mr-3 text-gray-500" />
-                        <span>{user.email}</span>
+                        <span>{usertoken?.user.email}</span>
                       </div>
-                      <div className="flex items-center">
+                      {/* <div className="flex items-center">
                         <Phone size={18} className="mr-3 text-gray-500" />
                         <span>{user.phone}</span>
-                      </div>
+                      </div> */}
                       <div className="flex items-center">
                         <MapPin size={18} className="mr-3 text-gray-500" />
                         <span>{user.location}</span>
