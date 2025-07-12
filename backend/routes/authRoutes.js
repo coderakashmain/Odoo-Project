@@ -11,14 +11,15 @@ const { transporter } = require("../middleware/mailProvider");
 
   router.post("/login", async (req, res) => {
     const { email, password } = req.body;
-
     try {
       const sql = "SELECT * FROM users WHERE email = ? ";
       const [results] = await db.query(sql, [email,]);
-
-      if (results.length === 0)
+      
+      if (results.length === 0){
+        
+    
         return res.status(401).json({ error: "No account found." });
-
+}
       let matchedUser = null;
 
       for (const user of results) {
@@ -39,6 +40,8 @@ const { transporter } = require("../middleware/mailProvider");
         process.env.JWT_SECRET,
         { expiresIn: "7d" }
       );
+
+      
 
       res.cookie("usertoken", token, {
         httpOnly: true,
@@ -68,6 +71,7 @@ const { transporter } = require("../middleware/mailProvider");
 
   router.post("/register", async (req, res) => {
     const { email,name, password} = req.body;
+   
     try {
       const sql = "SELECT * FROM users WHERE email = ?";
       const [results] = await db.query(sql, [email]);
@@ -158,18 +162,27 @@ const { transporter } = require("../middleware/mailProvider");
   });
 
 router.get("/logout", (req, res) => {
+
+  try {
+   
   res.clearCookie("usertoken", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "Strict",
   });
   res.json({ message: "Logged out successfully." });
+
+   }catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: err.message });  
+  }
 });
 
 
 //auth check 
 
 router.get("/check", verifyToken, async (req, res) => {
+
   if (!req.user) {
     console.log("User not found in middleware.");
     return res.status(401).json({ authenticated: false, message: "No token found" });
@@ -179,7 +192,7 @@ router.get("/check", verifyToken, async (req, res) => {
 
   try {
     const query = `
-      SELECT id, name, email, location, availability, profile, skill_offered, skill_wanted
+      SELECT id, name, email, location, availability, profile, skill_offered, skill_wanted,rating,bio
       FROM users
       WHERE id = ?
     `;
@@ -191,6 +204,8 @@ router.get("/check", verifyToken, async (req, res) => {
     }
 
     const user = userResults[0];
+
+    
 
     return res.json({
       authenticated: true,
