@@ -330,7 +330,7 @@ const HomePage = () => {
                 ))}
               </div>
               <Pagination
-                totalPages={totalPages}
+                totalPages={Math.round(filteredRequests.length / 6)}
                 currentPage={currentPage}
                 onPageChange={setCurrentPage}
               />
