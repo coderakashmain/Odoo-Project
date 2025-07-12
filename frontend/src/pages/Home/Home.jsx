@@ -15,9 +15,8 @@ import {
   Award,
   Calendar,
 } from "lucide-react";
-
+import Pagination from "../../component/utils/Pegination";
 const HomePage = () => {
-  // Sample data for publicly available requests
   const [publicRequests, setPublicRequests] = useState([
     {
       id: 1,
@@ -98,14 +97,13 @@ const HomePage = () => {
         "Professional headshots in exchange for personalized workout plans.",
     },
   ]);
-
-  // Filter states
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 10;
   const [searchTerm, setSearchTerm] = useState("");
   const [requestedSkillFilter, setRequestedSkillFilter] = useState("");
   const [availabilityFilter, setAvailabilityFilter] = useState("");
   const [skillTypeFilter, setSkillTypeFilter] = useState("");
 
-  // Filter function
   const filteredRequests = publicRequests.filter((request) => {
     const matchesSearch =
       searchTerm === "" ||
@@ -138,7 +136,6 @@ const HomePage = () => {
     );
   });
 
-  // Availability options
   const availabilityOptions = [
     "Weekdays",
     "Weekends",
@@ -150,7 +147,6 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Hero Section */}
         <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl text-white p-8 mb-8 relative overflow-hidden">
           <div className="relative z-10">
             <h1 className="text-4xl font-bold mb-4">Trade Skills, Not Cash</h1>
@@ -236,7 +232,6 @@ const HomePage = () => {
           </button>
         </div>
 
-        {/* Results Section */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
             <HeartHandshake className="mr-2 text-indigo-500" />
@@ -259,83 +254,90 @@ const HomePage = () => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredRequests.map((request) => (
-                <div
-                  key={request.id}
-                  className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition"
-                >
-                  <div className="p-6">
-                    <div className="flex items-start mb-4">
-                      <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
-                        <span className="text-lg font-bold text-indigo-700">
-                          {request.userPhoto}
+            <div>
+              {" "}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredRequests.map((request) => (
+                  <div
+                    key={request.id}
+                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition"
+                  >
+                    <div className="p-6">
+                      <div className="flex items-start mb-4">
+                        <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                          <span className="text-lg font-bold text-indigo-700">
+                            {request.userPhoto}
+                          </span>
+                        </div>
+                        <div>
+                          <h3 className="font-bold">{request.user}</h3>
+                          <div className="flex items-center">
+                            <Star className="text-yellow-500 fill-yellow-500 w-4 h-4 mr-1" />
+                            <span className="text-sm text-gray-600">
+                              {request.userRating}
+                            </span>
+                            <span className="mx-2 text-gray-300">•</span>
+                            <span className="text-sm text-gray-600">
+                              {request.location}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <div className="flex items-center bg-blue-50 rounded-lg p-3 mb-3">
+                          <div className="flex-grow">
+                            <p className="text-xs text-gray-500">Offering</p>
+                            <p className="font-medium text-blue-700">
+                              {request.skillOffered}
+                            </p>
+                          </div>
+                          <ArrowRight className="text-gray-400 mx-2" />
+                          <div className="flex-grow">
+                            <p className="text-xs text-gray-500">Requesting</p>
+                            <p className="font-medium text-blue-700">
+                              {request.skillRequested}
+                            </p>
+                          </div>
+                        </div>
+
+                        <p className="text-gray-700 mb-3">
+                          {request.description}
+                        </p>
+
+                        <div className="flex flex-wrap gap-2">
+                          {request.availability.map((avail) => (
+                            <span
+                              key={avail}
+                              className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
+                            >
+                              {avail}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-center pt-3 border-t">
+                        <span className="text-sm text-gray-500">
+                          {request.posted}
                         </span>
+                        <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition">
+                          Connect
+                        </button>
                       </div>
-                      <div>
-                        <h3 className="font-bold">{request.user}</h3>
-                        <div className="flex items-center">
-                          <Star className="text-yellow-500 fill-yellow-500 w-4 h-4 mr-1" />
-                          <span className="text-sm text-gray-600">
-                            {request.userRating}
-                          </span>
-                          <span className="mx-2 text-gray-300">•</span>
-                          <span className="text-sm text-gray-600">
-                            {request.location}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mb-4">
-                      <div className="flex items-center bg-blue-50 rounded-lg p-3 mb-3">
-                        <div className="flex-grow">
-                          <p className="text-xs text-gray-500">Offering</p>
-                          <p className="font-medium text-blue-700">
-                            {request.skillOffered}
-                          </p>
-                        </div>
-                        <ArrowRight className="text-gray-400 mx-2" />
-                        <div className="flex-grow">
-                          <p className="text-xs text-gray-500">Requesting</p>
-                          <p className="font-medium text-blue-700">
-                            {request.skillRequested}
-                          </p>
-                        </div>
-                      </div>
-
-                      <p className="text-gray-700 mb-3">
-                        {request.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2">
-                        {request.availability.map((avail) => (
-                          <span
-                            key={avail}
-                            className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs"
-                          >
-                            {avail}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-3 border-t">
-                      <span className="text-sm text-gray-500">
-                        {request.posted}
-                      </span>
-                      <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition">
-                        Connect
-                      </button>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
             </div>
           )}
         </div>
 
-        {/* Enhanced How It Works Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-2 text-center">
             How Skill Swapping Works
@@ -345,11 +347,9 @@ const HomePage = () => {
           </p>
 
           <div className="relative">
-            {/* Progress line */}
             <div className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-gray-200 transform -translate-y-1/2 z-0"></div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-              {/* Step 1 */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition">
                 <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="text-indigo-600" size={24} />
