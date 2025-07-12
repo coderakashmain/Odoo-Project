@@ -1,25 +1,31 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Mail, Lock, Loader2, User } from "lucide-react";
+import axios from "axios";
 
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    if(!email || !password || !name) {
+      setError("All fields are required.");
+      return;
+    }
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const  respnese = await axios.post("/api/auth/register", { email, password, name }, { withCredentials: true });
       setSuccess(true);
     } catch (err) {
-      setError(err.message || "Registration failed. Please try again.");
+      setError(err.response.data.error || "Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -78,6 +84,31 @@ function Signup() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+
+                      <User className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      id="name"
+                      name="name"
+                      type="name"
+                      autoComplete="name"
+                      required
+                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="John Doe"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                </div>
                 <div>
                   <label
                     htmlFor="email"

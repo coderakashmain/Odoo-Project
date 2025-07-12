@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, ArrowLeft } from "lucide-react";
+import axios from "axios";
 
 function ForgotPass() {
   const [email, setEmail] = useState("");
@@ -9,19 +10,23 @@ function ForgotPass() {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
+    if(!email) {
+      setError("Email is required."); 
+      return;
+    }
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+     
+      const respose = await axios.post("/api/auth/forgot-password", { email }, { withCredentials: true });
+      
 
-      // In a real app, you would call your password reset API here
-      // const response = await api.sendPasswordResetEmail(email);
+  
       setIsSubmitted(true);
     } catch (err) {
-      setError(err.message || "Failed to send reset email. Please try again.");
+      setError(err.respose.data.error || "Failed to send reset email. Please try again.");
     } finally {
       setIsLoading(false);
     }

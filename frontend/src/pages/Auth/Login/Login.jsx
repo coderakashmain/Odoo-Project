@@ -1,6 +1,8 @@
 import React, { memo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, Loader2 } from "lucide-react";
+import axios from "axios";
+import { AuthContext } from "../../../context/Auth/Auth";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -8,17 +10,24 @@ function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { setUsertoken } = React.useContext(AuthContext);
 
   const handleSubmit = async (e) => {
+    if(!email || !password) {
+      setError("Email and password are required."); 
+      return;
+    }
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+     const response = await axios.post("/api/auth/login", { email, password }, { withCredentials: true });
+      sessionStorage.setItem('logintoken', true);
+      setUsertoken(response.data);
       navigate("/");
     } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
+      setError(err.response.data.error || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -114,7 +123,7 @@ function Login() {
 
                 <div className="text-sm">
                   <Link
-                    to="/forgot-password"
+                    to="/forget-password"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot password?

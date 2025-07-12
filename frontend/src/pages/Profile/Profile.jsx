@@ -34,9 +34,24 @@ import {
   CreditCard,
   HelpCircle,
 } from "lucide-react";
+<<<<<<< HEAD
 import ChatPanel from "./chatPanel";
+=======
+import { AuthContext } from "../../context/Auth/Auth";
+import { useEffect } from "react";
+
+>>>>>>> cb9249837a68e4b1d3e60caf3a9ce978dd548f47
 
 const ProfilePage = () => {
+
+  const { usertoken,setUsertoken } = React.useContext(AuthContext);
+  const [editUser, setEditUser] = useState({
+    ...usertoken?.user,
+    availability: usertoken?.user?.availability || "", // single value
+  });
+  console.log("User token:", editUser);
+
+
   // User data state
   const [user, setUser] = useState({
     name: "Alex Johnson",
@@ -188,6 +203,12 @@ const ProfilePage = () => {
     "Evenings",
   ];
 
+  useEffect(() => {
+    if (usertoken?.user) {
+      setEditUser(usertoken.user);
+    }
+  }, [usertoken]);
+
   // Filter functions
   const filterRequests = (requests, filter, availabilityFilter) => {
     return requests.filter((req) => {
@@ -222,9 +243,11 @@ const ProfilePage = () => {
   // Handler functions
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUser((prev) => ({ ...prev, [name]: value }));
+    setEditUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
-
   const handleRequestChange = (e) => {
     const { name, value } = e.target;
     setNewRequest((prev) => ({ ...prev, [name]: value }));
@@ -293,6 +316,7 @@ const ProfilePage = () => {
     setShowRequestModal(false);
   };
 
+<<<<<<< HEAD
   const handleSendMessage = (messageText) => {
     const newMessage = {
       id: Date.now(),
@@ -322,10 +346,44 @@ const ProfilePage = () => {
       );
     }
   };
+=======
+
+ const handlesubmiteditRequest = async () => {
+  try {
+    const response = await axios.post(
+      "/api/user/update",
+      {
+        name: editUser.name,
+        email: editUser.email,
+        location: editUser.location,
+        availability: editUser.availability, 
+        profile: editUser.profile || "public",
+        skill_offered: JSON.stringify(editUser.skillsOffered || []),
+        skill_wanted: JSON.stringify(editUser.skillsNeeded || [])
+      },
+      { withCredentials: true }
+    );
+
+
+    setUsertoken((prev) => ({
+      ...prev,
+      user: { ...editUser }
+    }));
+
+    setEditMode(false); 
+    toast.success("Profile updated successfully!");
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    toast.error("Failed to update profile.");
+  }
+};
+
+>>>>>>> cb9249837a68e4b1d3e60caf3a9ce978dd548f47
 
   // Request Card Component
   const RequestCard = ({ request, type = "pending" }) => (
     <div
+<<<<<<< HEAD
       className={`border rounded-xl p-5 mb-4 transition-all hover:shadow-md cursor-pointer ${
         activeChatId === request.id ? "ring-2 ring-indigo-500" : ""
       } ${
@@ -336,6 +394,14 @@ const ProfilePage = () => {
           : "border-gray-200"
       }`}
       onClick={() => setActiveChatId(request.id)}
+=======
+      className={`border rounded-xl p-5 mb-4 transition-all hover:shadow-md ${type === "completed"
+        ? request.status === "accepted"
+          ? "border-green-200 bg-green-50/20"
+          : "border-red-200 bg-red-50/20"
+        : "border-gray-200"
+        }`}
+>>>>>>> cb9249837a68e4b1d3e60caf3a9ce978dd548f47
     >
       <div className="flex justify-between">
         <div className="flex items-start gap-3 flex-1">
@@ -392,11 +458,10 @@ const ProfilePage = () => {
               )}
               {type === "completed" && (
                 <span
-                  className={`px-2 py-1 rounded text-xs ${
-                    request.status === "accepted"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
+                  className={`px-2 py-1 rounded text-xs ${request.status === "accepted"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-red-100 text-red-800"
+                    }`}
                 >
                   {request.status}
                 </span>
@@ -539,6 +604,7 @@ const ProfilePage = () => {
   );
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Header */}
       <div className="lg:hidden bg-white shadow-sm p-4 flex items-center justify-between">
@@ -637,6 +703,18 @@ const ProfilePage = () => {
                     className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 font-bold"
                   >
                     {user.name
+=======
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Profile Header */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex-shrink-0 flex flex-col items-center">
+              <div className="relative mb-4">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-100 to-purple-200 flex items-center justify-center overflow-hidden shadow-md">
+                  <span className="text-4xl font-bold text-indigo-700">
+                    {usertoken?.user.name
+>>>>>>> cb9249837a68e4b1d3e60caf3a9ce978dd548f47
                       .split(" ")
                       .map((n) => n[0])
                       .join("")}
@@ -669,6 +747,7 @@ const ProfilePage = () => {
                 </div>
               </div>
 
+<<<<<<< HEAD
               <nav className="space-y-2">
                 <button className="w-full flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white">
                   <User size={18} className="mr-2" />
@@ -948,6 +1027,51 @@ const ProfilePage = () => {
                   </div>
 
                   {activeTab === "pending" ? (
+=======
+              <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
+                <Star
+                  size={16}
+                  className="mr-1 text-yellow-500 fill-yellow-500"
+                />
+                <span className="font-medium">{usertoken?.user.rating}</span>
+              </div>
+            </div>
+
+            <div className="flex-grow">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-800">
+                    {editMode ? (
+                      <input
+                        type="text"
+                        name="name"
+                        value={editUser.name || ""}
+                        onChange={handleInputChange}
+                        className="border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                      />
+                    ) : (
+                      usertoken?.user.name
+                    )}
+                  </h1>
+                  <p className="text-indigo-600 font-medium">
+                    {usertoken?.user?.skill_offered ? usertoken?.user.skill_offered.join(", ") : "No skills offered"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    if (editMode) {
+                      handlesubmiteditRequest();
+                    }
+                    setEditMode(!editMode)
+
+                  }}
+                  className={`flex items-center px-4 py-2 rounded-lg transition ${editMode
+                    ? "bg-green-600 text-white hover:bg-green-700"
+                    : "bg-gray-100 hover:bg-gray-200"
+                    }`}
+                >
+                  {editMode ? (
+>>>>>>> cb9249837a68e4b1d3e60caf3a9ce978dd548f47
                     <>
                       <FilterSection
                         filter={pendingFilter}
@@ -1025,6 +1149,7 @@ const ProfilePage = () => {
                 </div>
               </div>
 
+<<<<<<< HEAD
               {/* Chat Panel */}
               <div className={`${activeChatId ? "lg:w-1/3" : "hidden"}`}>
                 <ChatPanel
@@ -1039,6 +1164,220 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+=======
+              {editMode ? (
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-center">
+                    <Mail size={18} className="mr-3 text-gray-500" />
+                    <input
+                      type="email"
+                      name="email"
+                      disabled ={true}
+                      value={editUser.email}
+                      onChange={handleInputChange}
+                      className="border-b border-gray-300 focus:outline-none focus:border-indigo-500 flex-grow py-1"
+                    />
+                  </div>
+                  {/* <div className="flex items-center">
+                    <Phone size={18} className="mr-3 text-gray-500" />
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={user.phone}
+                      onChange={handleInputChange}
+                      className="border-b border-gray-300 focus:outline-none focus:border-indigo-500 flex-grow py-1"
+                    />
+                  </div> */}
+                  <div className="flex items-center">
+                    <MapPin size={18} className="mr-3 text-gray-500" />
+                    <input
+                      type="text"
+                      name="location"
+                      value={editUser.location}
+                      onChange={handleInputChange}
+                      className="border-b border-gray-300 focus:outline-none focus:border-indigo-500 flex-grow py-1"
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium mb-1">
+                      Availability
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {availabilityOptions.map((option) => (
+                        <label key={option} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={editUser.availability === option}
+                            onChange={(e) => {
+                              setEditUser((prev) => ({
+                                ...prev,
+                                availability: e.target.checked ? option : "",
+                              }));
+                            }}
+                            className="mr-1"
+                          />
+                          <span className="text-sm">{option}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <textarea
+                    name="bio"
+                    value={editUser.bio || ""}
+                    onChange={handleInputChange}
+                    className="w-full p-3 border rounded-lg mt-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    rows="3"
+                    placeholder="Tell others about yourself..."
+                  />
+                </div>
+              ) : (
+                <div className="mt-4 space-y-4">
+                  <div className="flex items-center">
+                    <Mail size={18} className="mr-3 text-gray-500" />
+                    <span>{usertoken?.user.email}</span>
+                  </div>
+                  {/* <div className="flex items-center">
+                    <Phone size={18} className="mr-3 text-gray-500" />
+                    <span>{user.phone}</span>
+                  </div> */}
+                  <div className="flex items-center">
+                    <MapPin size={18} className="mr-3 text-gray-500" />
+                    <span>{usertoken?.user.location ? usertoken?.user.location : 'Add location'}</span>
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="font-medium text-gray-700">Availability</h3>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {usertoken?.user.availability ? (
+                        <span
+
+                          className="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs"
+                        >
+                          {usertoken.user.availability}
+                        </span>
+                      ) : (<span lassName="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs">Add availability</span>)}
+                    </div>
+                  </div>
+                  <p className="mt-3 text-gray-700 leading-relaxed">
+                    {usertoken?.user.bio ? usertoken.user.bio : 'No bio provided'}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Requests Section with Tabs */}
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setActiveTab("pending")}
+                className={`px-4 py-2 rounded-lg font-medium flex items-center ${activeTab === "pending"
+                  ? "bg-indigo-600 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+                  }`}
+              >
+                <Clock size={18} className="mr-2" />
+                Pending ({pendingRequests.length})
+              </button>
+              <button
+                onClick={() => setActiveTab("completed")}
+                className={`px-4 py-2 rounded-lg font-medium flex items-center ${activeTab === "completed"
+                  ? "bg-indigo-600 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+                  }`}
+              >
+                <HeartHandshake size={18} className="mr-2" />
+                Completed ({completedRequests.length})
+              </button>
+            </div>
+
+            <button
+              onClick={() => setShowRequestModal(true)}
+              className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              <Plus size={16} className="mr-1" />
+              New Request
+            </button>
+          </div>
+
+          {activeTab === "pending" ? (
+            <>
+              <FilterSection
+                filter={pendingFilter}
+                setFilter={setPendingFilter}
+                availabilityFilter={pendingAvailabilityFilter}
+                setAvailabilityFilter={setPendingAvailabilityFilter}
+                placeholder="Filter pending requests..."
+              />
+
+              {filteredPending.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500 mb-4">
+                    No pending requests found
+                  </p>
+                  <button
+                    onClick={() => {
+                      setPendingFilter("");
+                      setPendingAvailabilityFilter("");
+                    }}
+                    className="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >
+                    Clear filters
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredPending.map((request) => (
+                    <RequestCard
+                      key={request.id}
+                      request={request}
+                      type="pending"
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <FilterSection
+                filter={completedFilter}
+                setFilter={setCompletedFilter}
+                availabilityFilter={completedAvailabilityFilter}
+                setAvailabilityFilter={setCompletedAvailabilityFilter}
+                placeholder="Filter completed requests..."
+              />
+
+              {filteredCompleted.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500 mb-4">
+                    No completed requests yet
+                  </p>
+                  <button
+                    onClick={() => {
+                      setCompletedFilter("");
+                      setCompletedAvailabilityFilter("");
+                    }}
+                    className="text-indigo-600 hover:text-indigo-800 font-medium"
+                  >
+                    Clear filters
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredCompleted.map((request) => (
+                    <RequestCard
+                      key={request.id}
+                      request={request}
+                      type="completed"
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+>>>>>>> cb9249837a68e4b1d3e60caf3a9ce978dd548f47
       </div>
 
       {/* New Request Modal */}

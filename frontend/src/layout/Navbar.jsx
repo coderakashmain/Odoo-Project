@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 function Navbar() {
-  const { auth, logout } = useContext(AuthContext);
+  const { usertoken, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
@@ -27,7 +27,6 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
     setShowProfile(false);
     setIsOpen(false);
   };
@@ -55,7 +54,7 @@ function Navbar() {
   ];
 
   const filteredNavItems = navItems.filter(
-    (item) => !item.authRequired || (item.authRequired && auth.isLoggedIn)
+    (item) => !item.authRequired || (item.authRequired && usertoken?.user.id)
   );
 
   return (
@@ -92,7 +91,7 @@ function Navbar() {
           {/* Right side items (search, notifications, profile) */}
           <div className="flex items-center">
             {/* Search - Only show when logged in */}
-            {auth.isLoggedIn && (
+            {usertoken?.user.id && (
               <div className="hidden md:flex relative mx-4">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search size={18} className="text-gray-400" />
@@ -106,7 +105,7 @@ function Navbar() {
             )}
 
             {/* Notifications - Only show when logged in */}
-            {auth.isLoggedIn && (
+            {usertoken?.user?.id && (
               <div className="ml-4 relative">
                 <button
                   onClick={toggleNotifications}
@@ -151,7 +150,7 @@ function Navbar() {
             )}
 
             {/* Profile dropdown or Login button */}
-            {auth.isLoggedIn ? (
+            {usertoken?.user?.id ? (
               <div className="ml-4 relative">
                 <button
                   onClick={toggleProfile}
@@ -243,7 +242,7 @@ function Navbar() {
               </NavLink>
             ))}
           </div>
-          {auth.isLoggedIn ? (
+          {usertoken?.user?.id ? (
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="flex items-center px-4">
                 <div className="flex-shrink-0">

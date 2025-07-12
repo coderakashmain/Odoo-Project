@@ -1,50 +1,64 @@
 import React, { createContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 // Create context
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({
-    isLoggedIn: true,
-    user: null,
-    isLoading: true,
-  });
+
+
+  const [usertoken, setUsertoken] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setAuth({
-        isLoggedIn: true,
-        user: storedUser,
-        isLoading: false,
-      });
-    } else {
-      setAuth((prev) => ({ ...prev, isLoading: false }));
+
+
+
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("/api/auth/check", { withCredentials: true });
+
+        setUsertoken(response.data)
+
+      } catch (error) {
+        console.error("Auth check failed:", error.response ? error.response.data : error.message);
+        setUsertoken(null);
+
+
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAuth();
+
+
+
+
+  }, [location.pathname]);
+
+
+
+  const logout = async () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+
+    if (!confirmLogout) return;
+
+    try {
+      await axios.get(`/api/auth/logout`)
+      window.location.reload();
+    } catch (err) {
+      console.error("Logout Error:", err)
     }
-  }, []);
 
-  // Function to login
-  const login = (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    setAuth({
-      isLoggedIn: true,
-      user: userData,
-      isLoading: false,
-    });
-    return userData;
-  };
-
-  const logout = () => {
-    localStorage.removeItem("user");
-    setAuth({
-      isLoggedIn: false,
-      user: null,
-      isLoading: false,
-    });
-  };
+  }
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout }}>
+    <AuthContext.Provider value={{ usertoken, setUsertoken, logout }}>
       {children}
     </AuthContext.Provider>
   );
