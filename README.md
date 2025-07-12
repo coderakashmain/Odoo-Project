@@ -5,6 +5,12 @@ A **peer-to-peer skill exchange platform** where users can trade skills instead 
 ![SkillSwap Screenshot](./screenshot.png) <!-- Replace with actual screenshot -->
 
 ---
+## Team Members :
+- Akash Bindhani
+- Jitu Pradhan
+- Tarun Kumar Singh
+- Laxman Mohanta
+
 
 ##  Table of Contents
 
@@ -57,9 +63,4 @@ A **peer-to-peer skill exchange platform** where users can trade skills instead 
 
 ---
 
-## Installation ⚙
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/skillswap.git
-   cd skillswap
