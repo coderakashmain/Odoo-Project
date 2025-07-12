@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const http = require("http");
 const authRoutes = require("./routes/authRoutes");
+const userEditRoutes = require("./routes/userEditRoutes");
+const userEventRoutes = require("./routes/userEventRoutes");
 
 
 const cookieParser = require("cookie-parser");
@@ -20,6 +22,8 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
+app.use("/api/useredit", userEditRoutes);
+app.use("/api/userevent", userEventRoutes);
 
 
 
