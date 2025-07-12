@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require("dotenv");
 const cors = require("cors");
 const http = require("http");
+const authRoutes = require("./routes/authRoutes");
+
 
 const cookieParser = require("cookie-parser");
 
@@ -16,6 +18,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/api/auth", authRoutes);
 
 
 
